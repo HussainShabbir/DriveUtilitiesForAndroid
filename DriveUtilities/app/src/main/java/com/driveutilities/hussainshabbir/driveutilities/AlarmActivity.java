@@ -35,21 +35,24 @@ public class AlarmActivity extends BaseActivity {
         Intent intent = new Intent(AlarmActivity.this,AlarmReceiver.class);
         SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (alarmManager == null) {
+        if (((ToggleButton)view).isChecked()) {
             alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
             calendar.set(Calendar.MINUTE,timePicker.getMinute());
             editor.putBoolean("status",true);
+            intent.putExtra("status",true);
             editor.commit();
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this,0,intent,0);
             alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
         } else {
             editor.putBoolean("status",false);
             editor.commit();
-            alarmManager.cancel(pendingIntent);
+            if (alarmManager != null) {
+                alarmManager.cancel(pendingIntent);
+            }
+            intent.putExtra("status",false);
             sendBroadcast(intent);
-            alarmManager = null;
         }
     }
 

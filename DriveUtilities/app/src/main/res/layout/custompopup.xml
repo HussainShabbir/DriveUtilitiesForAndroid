@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/custom_popup_layout"
-    android:background="@drawable/popupwindowborder">
+    android:background="@drawable/popupwindowborder"
+    android:focusableInTouchMode="true" >
     <TextView
         android:id="@+id/textview"
         android:layout_width="wrap_content"
@@ -15,8 +16,8 @@
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
         android:textColor="@color/colorAccent"
         android:layout_below="@+id/textview"/>
     <Button

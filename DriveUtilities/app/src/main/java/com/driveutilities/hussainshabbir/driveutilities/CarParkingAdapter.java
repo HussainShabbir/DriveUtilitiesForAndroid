@@ -1,5 +1,8 @@
 package com.driveutilities.hussainshabbir.driveutilities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -14,7 +22,8 @@ import java.util.List;
  */
 
 public class CarParkingAdapter extends RecyclerView.Adapter<CarParkingAdapter.MyViewHolder> {
-private List<CarParking> dataSourceList;
+    private List<CarParking> dataSourceList;
+    private Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView location;
@@ -25,8 +34,9 @@ private List<CarParking> dataSourceList;
             this.deleteButton = (Button)view.findViewById(R.id.delete);
         }
     }
-    public CarParkingAdapter(List<CarParking> dataSourceList) {
+    public CarParkingAdapter(List<CarParking> dataSourceList, Context context) {
         this.dataSourceList = dataSourceList;
+        this.context = context;
     }
 
     @Override
@@ -44,6 +54,13 @@ private List<CarParking> dataSourceList;
             @Override
             public void onClick(View v) {
                 dataSourceList.remove(position);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<CarParking>>() {}.getType();
+                String json = gson.toJson(dataSourceList,listType);
+                editor.putString("list",json);
+                editor.commit();
                 notifyDataSetChanged();
             }
         });

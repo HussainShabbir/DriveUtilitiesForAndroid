@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -82,7 +83,7 @@ public class MapLocation extends BaseActivity implements OnMapReadyCallback,
         MarkerOptions mo = new MarkerOptions();
         Geocoder geocoder = new Geocoder(this);
         try {
-            String locationName = String.format("Near %s",getIntent().getStringExtra("key"));
+            String locationName = String.format("Nearby %s",getIntent().getStringExtra("key"));
             addressList = geocoder.getFromLocationName(locationName,5);
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,8 +91,8 @@ public class MapLocation extends BaseActivity implements OnMapReadyCallback,
         for (int i = 0; i<addressList.size(); i++ ) {
             Address address = addressList.get(i);
             LatLng latlng = new LatLng(address.getLatitude(),address.getLongitude());
-            aMap.addMarker(mo.position(latlng)
-            .title(address.getAddressLine(i)));
+            Marker marker = aMap.addMarker(mo.position(latlng)
+            .title(String.format("%s: %s,%s",address.getAddressLine(0),address.getAddressLine(1),address.getAddressLine(2))));
             aMap.animateCamera(CameraUpdateFactory.newLatLng(latlng));
         }
     }
